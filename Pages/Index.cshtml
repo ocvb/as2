@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 mb-4">Welcome to Fresh Farm Market</h1>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">User Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        @if (string.IsNullOrEmpty(Model.UserProfilePicture))
+                        {
+                            <img src="~/images/default-profile-picture.png" class="rounded-circle shadow"
+                                 alt="Default Profile Picture" width="150" height="150" style="object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="@Model.UserProfilePicture" class="rounded-circle shadow"
+                                 alt="Profile Picture" width="150" height="150" style="object-fit: cover;" />
+                        }
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 text-start">
+                            <p><strong>Full Name:</strong> @Model.UserFullName</p>
+                            <p><strong>Email:</strong> @Model.UserEmail</p>
+                            <p><strong>Phone:</strong> @Model.UserPhone</p>
+                        </div>
+                        <div class="col-md-6 text-start">
+                            <p><strong>Address:</strong> @Model.UserAddress</p>
+                            <p><strong>Gender:</strong> @Model.UserGender</p>
+                            <p><strong>About Me:</strong> @(string.IsNullOrEmpty(Model.UserAboutMe) ? "N/A" : Model.UserAboutMe)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">Welcome to Fresh Farm Market!</h4>
+                <p>Please <a asp-page="/Login" class="alert-link">login</a> to view your profile and access our services.</p>
+            </div>
+        }
+    </div>
+</div>

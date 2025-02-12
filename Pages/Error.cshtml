@@ -1,0 +1,64 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-template">
+                <h1 class="display-4 text-danger mb-4">
+                    <i class="bi bi-exclamation-triangle"></i> Oops!
+                </h1>
+
+                <div class="error-details mb-4">
+                    <h2 class="text-danger">An error occurred while processing your request.</h2>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">
+                            <h4 class="alert-heading">Error Details:</h4>
+                            <p>@Model.ErrorMessage</p>
+                        </div>
+                    }
+
+                    @if (Model.ShowRequestId)
+                    {
+                        <div class="text-muted mt-3">
+                            <small>Request ID: <code>@Model.RequestId</code></small>
+                        </div>
+                    }
+                </div>
+
+                <div class="error-actions">
+                    <a asp-page="/Index" class="btn btn-primary btn-lg me-3">
+                        <i class="bi bi-house-door"></i> Back to Home
+                    </a>
+                    <a asp-page="/Contact" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-envelope"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-template {
+        padding: 40px 15px;
+    }
+    .error-details {
+        margin: 20px 0;
+    }
+    .error-actions {
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+    .error-actions .btn {
+        margin-bottom: 10px;
+    }
+    .bi {
+        margin-right: 5px;
+    }
+</style>

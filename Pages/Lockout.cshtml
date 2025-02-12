@@ -1,0 +1,55 @@
+@page
+@model LockoutModel
+@{
+    ViewData["Title"] = "Account Locked";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="alert alert-danger">
+                <h2><i class="bi bi-lock-fill"></i> Account Locked</h2>
+                <p class="lead">Your account has been temporarily locked due to multiple failed login attempts.</p>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">What happened?</h5>
+                    <p class="card-text">
+                        For your security, we've temporarily locked your account after detecting multiple unsuccessful login attempts.
+                    </p>
+
+                    <h5 class="card-title mt-4">What can you do?</h5>
+                    <ul class="list-unstyled">
+                        <li>✓ Wait for 5 minutes before trying again</li>
+                        <li>✓ Make sure you're using the correct password</li>
+                        <li>✓ Reset your password if you've forgotten it</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-page="/Index" class="btn btn-primary me-2">
+                    <i class="bi bi-house-door"></i> Return Home
+                </a>
+                <a href="mailto:support@example.com" class="btn btn-secondary">
+                    <i class="bi bi-envelope"></i> Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bi {
+        margin-right: 5px;
+    }
+    .alert {
+        border-radius: 8px;
+        padding: 2rem;
+    }
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
