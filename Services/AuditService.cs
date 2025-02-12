@@ -24,7 +24,7 @@ namespace _234412H_AS2.Services
                 Details = details,
                 Timestamp = DateTime.UtcNow,
                 IpAddress = context?.Connection?.RemoteIpAddress?.ToString() ?? "Unknown",
-                UserAgent = context?.Request?.Headers["User-Agent"].ToString() ?? "Unknown"
+                UserAgent = context?.Request?.Headers.UserAgent.ToString() ?? "Unknown"
             };
 
             _context.AuditLogs.Add(auditLog);

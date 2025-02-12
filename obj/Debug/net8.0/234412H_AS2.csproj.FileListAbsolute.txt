@@ -282,6 +282,7 @@
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.MvcApplicationPartsAssemblyInfo.cache
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.RazorAssemblyInfo.cache
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.RazorAssemblyInfo.cs
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.sourcelink.json
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/staticwebassets.build.json
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/staticwebassets.development.json
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/staticwebassets/msbuild.234412H_AS2.Microsoft.AspNetCore.StaticWebAssets.props
@@ -298,3 +299,9 @@
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.pdb
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/234412H_AS2.genruntimeconfig.cache
 /Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/obj/Debug/net8.0/ref/234412H_AS2.dll
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/QRCoder.dll
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/SkiaSharp.dll
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/runtimes/osx/native/libSkiaSharp.dylib
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/runtimes/win-arm64/native/libSkiaSharp.dll
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/runtimes/win-x64/native/libSkiaSharp.dll
+/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/bin/Debug/net8.0/runtimes/win-x86/native/libSkiaSharp.dll

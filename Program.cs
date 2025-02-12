@@ -4,6 +4,8 @@ using _234412H_AS2.Model;
 using _234412H_AS2.Services;
 using _234412H_AS2.Middleware;
 using Microsoft.AspNetCore.DataProtection;
+using _234412H_AS2.Validators;
+using _234412H_AS2.Services.Interfaces;
 
 namespace _234412H_AS2;
 
@@ -46,19 +48,25 @@ public class Program
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
+            // Password requirements
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredLength = 12;
 
+            // Lockout settings
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Lockout.MaxFailedAccessAttempts = 3;
             options.Lockout.AllowedForNewUsers = true;
+
         })
         .AddEntityFrameworkStores<AuthContextDb>()
-        .AddDefaultTokenProviders();
+        .AddDefaultTokenProviders()
+        .AddPasswordValidator<CustomPasswordValidator<ApplicationUser>>();
 
+        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+        builder.Services.AddScoped<IPasswordService, PasswordService>();
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
         builder.Services.ConfigureApplicationCookie(options =>
@@ -92,11 +100,38 @@ public class Program
 
         var app = builder.Build();
 
+        // Initialize database and roles
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<AuthContextDb>();
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                // Ensure database is created
+                context.Database.EnsureCreated();
+
+                // Create roles if they don't exist
+                if (!roleManager.RoleExistsAsync("User").Result)
+                {
+                    var role = new IdentityRole("User");
+                    roleManager.CreateAsync(role).Wait();
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred while initializing the database.");
+            }
+        }
+
         // Configure error handling
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
-            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            app.UseStatusCodePagesWithReExecute("/Errors/404");
             app.UseHsts();
         }
         else

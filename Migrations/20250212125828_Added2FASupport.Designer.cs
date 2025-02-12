@@ -11,8 +11,8 @@ using _234412H_AS2.Model;
 namespace _234412H_AS2.Migrations
 {
     [DbContext(typeof(AuthContextDb))]
-    [Migration("20250212043901_init")]
-    partial class init
+    [Migration("20250212125828_Added2FASupport")]
+    partial class Added2FASupport
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -268,6 +268,34 @@ namespace _234412H_AS2.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("_234412H_AS2.Model.TwoFactorAuth", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EnabledDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SecretKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("TwoFactorAuths");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -317,6 +345,17 @@ namespace _234412H_AS2.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("_234412H_AS2.Model.TwoFactorAuth", b =>
+                {
+                    b.HasOne("_234412H_AS2.Model.ApplicationUser", "User")
+                        .WithOne()
+                        .HasForeignKey("_234412H_AS2.Model.TwoFactorAuth", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

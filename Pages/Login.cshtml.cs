@@ -37,7 +37,7 @@ namespace _234412H_AS2.Pages
         [BindProperty(SupportsGet = false)]
         public required string RecaptchaToken { get; set; }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             if (string.IsNullOrEmpty(RecaptchaToken))
             {
@@ -55,8 +55,12 @@ namespace _234412H_AS2.Pages
 
                 if (ModelState.IsValid)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(Input.Email,
-                        Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+
+                    if (result.RequiresTwoFactor)
+                    {
+                        return RedirectToPage("./Account/LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    }
 
                     if (result.Succeeded)
                     {

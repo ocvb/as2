@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _234412H_AS2.Model;
 
@@ -10,9 +11,11 @@ using _234412H_AS2.Model;
 namespace _234412H_AS2.Migrations
 {
     [DbContext(typeof(AuthContextDb))]
-    partial class AuthContextDbModelSnapshot : ModelSnapshot
+    [Migration("20250212121654_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -145,6 +148,30 @@ namespace _234412H_AS2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PasswordHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordHistories");
+                });
+
             modelBuilder.Entity("_234412H_AS2.Model.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -265,34 +292,6 @@ namespace _234412H_AS2.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("_234412H_AS2.Model.TwoFactorAuth", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("EnabledDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SecretKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("TwoFactorAuths");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -344,11 +343,11 @@ namespace _234412H_AS2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("_234412H_AS2.Model.TwoFactorAuth", b =>
+            modelBuilder.Entity("PasswordHistory", b =>
                 {
                     b.HasOne("_234412H_AS2.Model.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("_234412H_AS2.Model.TwoFactorAuth", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

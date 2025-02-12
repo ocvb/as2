@@ -4,6 +4,44 @@
     ViewData["Title"] = "Home page";
 }
 
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="account-management mt-4">
+            <h3>Account Management</h3>
+            <div class="list-group mt-3">
+                <a asp-page="/Account/ChangePassword" class="list-group-item list-group-item-action">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                <a asp-page="/Account/Manage/TwoFactorAuthentication" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shield-alt"></i> Two-Factor Authentication
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .account-management {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .list-group-item {
+            text-align: left;
+        }
+        .list-group-item i {
+            margin-right: 10px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+}
+
 <div class="container mt-5">
     <div class="text-center">
         <h1 class="display-4 mb-4">Welcome to Fresh Farm Market</h1>

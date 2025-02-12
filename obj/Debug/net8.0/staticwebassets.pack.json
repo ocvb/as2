@@ -249,12 +249,28 @@
       "PackagePath": "staticwebassets/uploads/023d91d2-25ff-4e56-97a4-3beada4bd851_th-4067442754.jpg"
     },
     {
+      "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/24ecd64b-0b61-4f00-956f-ea7ab6e6078f_th-4067442754.jpg",
+      "PackagePath": "staticwebassets/uploads/24ecd64b-0b61-4f00-956f-ea7ab6e6078f_th-4067442754.jpg"
+    },
+    {
       "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/56cd3b7f-d55d-4841-9163-bda18ff88e43_82d9dd09cc7f7f35a73dd4e53dbe09f2-full.webp",
       "PackagePath": "staticwebassets/uploads/56cd3b7f-d55d-4841-9163-bda18ff88e43_82d9dd09cc7f7f35a73dd4e53dbe09f2-full.webp"
     },
     {
       "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/723a8983-8330-4c45-a38f-0739f3024681_th-4067442754.jpg",
       "PackagePath": "staticwebassets/uploads/723a8983-8330-4c45-a38f-0739f3024681_th-4067442754.jpg"
+    },
+    {
+      "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/89f523c5-a3ff-4815-9efe-23c3b993ed85_th-4067442754.jpg",
+      "PackagePath": "staticwebassets/uploads/89f523c5-a3ff-4815-9efe-23c3b993ed85_th-4067442754.jpg"
+    },
+    {
+      "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/a09e9102-b064-4991-b06d-58d1c45eb34b_th-4067442754.jpg",
+      "PackagePath": "staticwebassets/uploads/a09e9102-b064-4991-b06d-58d1c45eb34b_th-4067442754.jpg"
+    },
+    {
+      "Id": "/Users/seuno/Desktop Items/2024/SEM2/AS/234412H_AS2/wwwroot/uploads/ae065e77-adea-4c82-b812-fdaca1e0ab5e_th-4067442754.jpg",
+      "PackagePath": "staticwebassets/uploads/ae065e77-adea-4c82-b812-fdaca1e0ab5e_th-4067442754.jpg"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.234412H_AS2.Microsoft.AspNetCore.StaticWebAssets.props",
