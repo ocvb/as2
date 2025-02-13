@@ -68,6 +68,9 @@ public class Program
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IPasswordService, PasswordService>();
         builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
+        builder.Services.AddHostedService<BackgroundBackupService>();
 
         builder.Services.ConfigureApplicationCookie(options =>
         {

@@ -7,95 +7,214 @@
 <div class="container mt-5">
     <div class="row justify-content-center align-items-center">
         <div class="col-sm-12 col-md-12 col-lg-6">
-            <h1 class="mb-3">Register Membership</h1>
-
-            <form method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.FullName">Full Name</label>
-                    <input type="text" asp-for="RModel.FullName" class="form-control" />
-                    <span asp-validation-for="RModel.FullName" class="text-danger"></span>
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h2 class="mb-0">Register Membership</h2>
                 </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="text-danger mb-4"></div>
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.Email">Email Address</label>
-                    <input type="email" asp-for="RModel.Email" class="form-control" />
-                    <span asp-validation-for="RModel.Email" class="text-danger"></span>
-                </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.FullName">Full Name</label>
+                                <input type="text" asp-for="RModel.FullName" class="form-control" placeholder="Enter your full name" />
+                                <span asp-validation-for="RModel.FullName" class="text-danger"></span>
+                            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.CreditCardNumber">Credit Card Number</label>
-                    <input type="text" asp-for="RModel.CreditCardNumber" class="form-control" />
-                    <span asp-validation-for="RModel.CreditCardNumber" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.Gender">Gender</label>
-                    <select asp-for="RModel.Gender" class="form-select">
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <span asp-validation-for="RModel.Gender" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.Phone">Phone Number</label>
-                    <input type="tel" asp-for="RModel.Phone" class="form-control" />
-                    <span asp-validation-for="RModel.Phone" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.Address">Address</label>
-                    <textarea asp-for="RModel.Address" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="RModel.Address" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RModel.Password"></label>
-                    <div class="input-group">
-                        <input asp-for="RModel.Password" class="form-control" id="registerPassword" />
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword"
-                                    onclick="togglePasswordVisibility('registerPassword', 'toggleRegisterPassword')">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.Email">Email Address</label>
+                                <input type="email" asp-for="RModel.Email" class="form-control" placeholder="name@example.com" />
+                                <span asp-validation-for="RModel.Email" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
-                    <span asp-validation-for="RModel.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RModel.ConfirmPassword"></label>
-                    <div class="input-group">
-                        <input asp-for="RModel.ConfirmPassword" class="form-control" id="confirmPassword" />
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword"
-                                    onclick="togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword')">
-                                <i class="fas fa-eye"></i>
-                            </button>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.CreditCardNumber">Credit Card Number</label>
+                                <input type="text" asp-for="RModel.CreditCardNumber" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX" />
+                                <span asp-validation-for="RModel.CreditCardNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.Gender">Gender</label>
+                                <select asp-for="RModel.Gender" class="form-select">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="RModel.Gender" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
-                    <span asp-validation-for="RModel.ConfirmPassword" class="text-danger"></span>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.ProfilePicture">Profile Picture</label>
-                    <input type="file" asp-for="RModel.ProfilePicture" class="form-control" accept="image/.jpg" />
-                    <span asp-validation-for="RModel.ProfilePicture" class="text-danger"></span>
-                </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.Phone">Phone Number</label>
+                                <input type="tel" asp-for="RModel.Phone" class="form-control" placeholder="+65 XXXX XXXX" />
+                                <span asp-validation-for="RModel.Phone" class="text-danger"></span>
+                            </div>
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.AboutMe">About Me</label>
-                    <textarea asp-for="RModel.AboutMe" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="RModel.AboutMe" class="text-danger"></span>
-                </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.ProfilePicture">Profile Picture</label>
+                                <input type="file" asp-for="RModel.ProfilePicture" class="form-control" accept="image/.jpg" />
+                                <span asp-validation-for="RModel.ProfilePicture" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Register Memebership</button>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" asp-for="RModel.Address">Address</label>
+                            <textarea asp-for="RModel.Address" class="form-control" rows="2" placeholder="Enter your full address"></textarea>
+                            <span asp-validation-for="RModel.Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.Password">Password</label>
+                                <div class="input-group">
+                                    <input asp-for="RModel.Password" class="form-control" id="registerPassword" />
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword"
+                                            onclick="togglePasswordVisibility('registerPassword', 'toggleRegisterPassword')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="RModel.Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" asp-for="RModel.ConfirmPassword">Confirm Password</label>
+                                <div class="input-group">
+                                    <input asp-for="RModel.ConfirmPassword" class="form-control" id="confirmPassword" />
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword"
+                                            onclick="togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="RModel.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" asp-for="RModel.AboutMe">About Me</label>
+                            <textarea asp-for="RModel.AboutMe" class="form-control" rows="3" placeholder="Tell us about yourself"></textarea>
+                            <span asp-validation-for="RModel.AboutMe" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Register Membership</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        background-color: #ffffff;
+        border-radius: 15px;
+    }
+    .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+    }
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px 15px;
+    }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    .btn-primary {
+        padding: 12px 30px;
+        border-radius: 8px;
+    }
+</style>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Credit card number validation
+            $.validator.addMethod("creditCard", function (value, element) {
+                return this.optional(element) || /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(value);
+            }, "Please enter a valid credit card number in format XXXX-XXXX-XXXX-XXXX");
+
+            // Phone number validation
+            $.validator.addMethod("phoneNumber", function (value, element) {
+                return this.optional(element) || /^\+65\s\d{4}\s\d{4}$/.test(value);
+            }, "Please enter a valid Singapore phone number (+65 XXXX XXXX)");
+
+            // File type validation
+            $('input[type="file"]').change(function () {
+                var file = this.files[0];
+                if (file) {
+                    if (!file.type.match('image/jpeg')) {
+                        alert('Please upload only .jpg files');
+                        $(this).val('');
+                    }
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB');
+                        $(this).val('');
+                    }
+                }
+            });
+
+            // Format credit card number as user types
+            $('#RModel_CreditCardNumber').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '').substring(0,16);
+                var formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1-');
+                $(this).val(formattedValue);
+            });
+
+            // Format phone number as user types
+            $('#RModel_Phone').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '');
+                if (!value.startsWith('65')) {
+                    value = '65' + value;
+                }
+                if (value.length > 2) {
+                    value = '+' + value.substring(0,2) + ' ' + value.substring(2,6) + ' ' + value.substring(6,10);
+                }
+                $(this).val(value);
+            });
+
+            // Password strength indicator
+            $('#RModel_Password').on('input', function() {
+                var password = $(this).val();
+                var strength = 0;
+
+                if (password.length >= 12) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                var strengthBar = $('#passwordStrength');
+                if (!strengthBar.length) {
+                    $(this).after('<div id="passwordStrength" class="progress mt-2" style="height: 5px;"><div class="progress-bar" role="progressbar"></div></div>');
+                    strengthBar = $('#passwordStrength');
+                }
+
+                var progressBar = strengthBar.find('.progress-bar');
+                progressBar.css('width', (strength * 20) + '%');
+
+                switch(strength) {
+                    case 0:
+                    case 1:
+                        progressBar.removeClass().addClass('progress-bar bg-danger');
+                        break;
+                    case 2:
+                    case 3:
+                        progressBar.removeClass().addClass('progress-bar bg-warning');
+                        break;
+                    case 4:
+                    case 5:
+                        progressBar.removeClass().addClass('progress-bar bg-success');
+                        break;
+                }
+            });
+        });
+    </script>
+}

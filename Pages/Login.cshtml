@@ -9,65 +9,109 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=@Model.RecaptchaSiteKey"></script>
     <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            grecaptcha.ready(function() {
-                grecaptcha.execute('@Model.RecaptchaSiteKey', {action: 'login'})
-                    .then(function(token) {
-                        console.log('Token generated:', token); // Debug log
-                        document.getElementById('RecaptchaToken').value = token;
-                        document.getElementById('debug').textContent = 'Token: ' + token;
-                        e.target.submit();
-                    })
-                    .catch(function(error) {
-                        console.error('reCAPTCHA Error:', error);
-                        document.getElementById('debug').textContent = 'Error: ' + error.message;
-                    });
+        var form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('@Model.RecaptchaSiteKey', { action: 'login' })
+                        .then(function(token) {
+                            document.getElementById('RecaptchaToken').value = token;
+                            form.submit();
+                        })
+                        .catch(function(error) {
+                            console.error('reCAPTCHA Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                });
             });
-        });
+        }
     </script>
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center align-items-center">
-        <div class="col-sm-12 col-md-12 col-lg-4">
-            <h1 class="mb-3">Login</h1>
-
-            <form method="post">
-                <input type="hidden" id="RecaptchaToken" name="RecaptchaToken" />
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="mb-3">
-                    <label asp-for="Input.Email" class="form-label"></label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+        <div class="col-sm-12 col-md-8 col-lg-4">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h2 class="mb-0">Login</h2>
                 </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        <input type="hidden" id="RecaptchaToken" name="RecaptchaToken" />
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                <div class="mb-3">
-                    <div class="form-group">
-                        <label asp-for="Input.Password"></label>
-                        <div class="input-group">
-                            <input asp-for="Input.Password" class="form-control" id="passwordInput" />
-                            <div class="input-group-append">
+                        <div class="mb-4">
+                            <label asp-for="Input.Email" class="form-label fw-bold"></label>
+                            <input asp-for="Input.Email" class="form-control" placeholder="Enter your email" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Input.Password" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <input asp-for="Input.Password" class="form-control" id="passwordInput" placeholder="Enter your password" />
                                 <button type="button" class="btn btn-outline-secondary" id="togglePassword"
                                         onclick="togglePasswordVisibility('passwordInput', 'togglePassword')">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
 
-                <div class="mb-3 form-check">
-                    <input asp-for="Input.RememberMe" class="form-check-input" />
-                    <label asp-for="Input.RememberMe" class="form-check-label"></label>
-                </div>
+                        <div class="mb-4 form-check">
+                            <input asp-for="Input.RememberMe" class="form-check-input" />
+                            <label asp-for="Input.RememberMe" class="form-check-label"></label>
+                        </div>
 
-                <div class="mb-3">
-                    <pre id="debug" class="text-muted small"></pre>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <a asp-page="/Account/ForgotPassword" class="text-decoration-none">Forgot your password?</a>
+                        </div>
+
+                        <pre id="debug" class="text-muted small d-none"></pre>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        background-color: #ffffff;
+        border-radius: 15px;
+    }
+    .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    .btn-primary {
+        padding: 12px 30px;
+        border-radius: 8px;
+    }
+    .input-group .btn {
+        padding: 0 15px;
+    }
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+

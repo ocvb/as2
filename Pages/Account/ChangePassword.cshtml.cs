@@ -45,6 +45,9 @@ namespace _234412H_AS2.Pages.Account
         [TempData]
         public string StatusMessage { get; set; }
 
+        [TempData]
+        public string SuccessMessage { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -56,13 +59,13 @@ namespace _234412H_AS2.Pages.Account
             var (success, message) = await _passwordService.ChangePasswordAsync(userId,
                 Input.CurrentPassword, Input.NewPassword);
 
-            StatusMessage = message;
             if (!success)
             {
                 ModelState.AddModelError(string.Empty, message);
                 return Page();
             }
 
+            SuccessMessage = "Password changed successfully.";
             return RedirectToPage();
         }
     }
