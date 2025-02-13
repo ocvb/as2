@@ -53,15 +53,30 @@
                     <span asp-validation-for="RModel.Address" class="text-danger"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.Password">Password</label>
-                    <input type="password" asp-for="RModel.Password" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="RModel.Password"></label>
+                    <div class="input-group">
+                        <input asp-for="RModel.Password" class="form-control" id="registerPassword" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword"
+                                    onclick="togglePasswordVisibility('registerPassword', 'toggleRegisterPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
                     <span asp-validation-for="RModel.Password" class="text-danger"></span>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
-                    <input type="password" asp-for="RModel.ConfirmPassword" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="RModel.ConfirmPassword"></label>
+                    <div class="input-group">
+                        <input asp-for="RModel.ConfirmPassword" class="form-control" id="confirmPassword" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword"
+                                    onclick="togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
                     <span asp-validation-for="RModel.ConfirmPassword" class="text-danger"></span>
                 </div>
 

@@ -3,10 +3,15 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace _234412H_AS2.Model
 {
-    public class AuthContextDb(DbContextOptions<AuthContextDb> options) : IdentityDbContext<ApplicationUser>(options)
+    public class AuthContextDb : IdentityDbContext<ApplicationUser>
     {
+        public AuthContextDb(DbContextOptions<AuthContextDb> options) : base(options)
+        {
+        }
+
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
+        public DbSet<PasswordHistory> PasswordHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,9 +22,10 @@ namespace _234412H_AS2.Model
                 .WithOne()
                 .HasForeignKey<TwoFactorAuth>(t => t.UserId);
 
-            modelBuilder.Entity<TwoFactorAuth>()
-                .Property(t => t.SecretKey)
-                .IsRequired();
+            modelBuilder.Entity<PasswordHistory>()
+                .HasOne(ph => ph.User)
+                .WithMany()
+                .HasForeignKey(ph => ph.UserId);
         }
     }
 }

@@ -19,26 +19,38 @@ namespace _234412H_AS2.Pages
         public string? ErrorMessage { get; set; }
         public new int StatusCode { get; set; }
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public string PageTitle { get; set; }
 
-        public void OnGet(int? statusCode)
+        public IActionResult OnGet(int? statusCode)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
             StatusCode = statusCode ?? 500;
 
-
-            ErrorMessage = StatusCode switch
+            (ErrorMessage, PageTitle) = StatusCode switch
             {
-                400 => "Bad Request - The server cannot process your request.",
-                401 => "Unauthorized - You need to authenticate first.",
-                403 => "Forbidden - You don't have permission to access this resource.",
-                404 => "Page Not Found - The requested page does not exist.",
-                500 => "Internal Server Error - Something went wrong on our end.",
-                _ => "An error occurred while processing your request."
+                400 => ("Your request contains invalid parameters or formatting.", "Bad Request"),
+                401 => ("Please log in to access this resource.", "Authentication Required"),
+                403 => ("You don't have sufficient permissions to access this resource.", "Access Denied"),
+                404 => ("The page or resource you're looking for could not be found.", "Page Not Found"),
+                500 => ("We're experiencing technical difficulties. Please try again later.", "Server Error"),
+                _ => ("An unexpected error occurred while processing your request.", "Error")
             };
 
             Response.StatusCode = StatusCode;
-            _logger.LogError("Error {StatusCode}: {ErrorMessage} - RequestId: {RequestId}",
-                StatusCode, ErrorMessage, RequestId);
+
+            // Log with additional context
+            var logMessage = $"Error occurred - Status: {StatusCode}, URL: {Request.Path}, Method: {Request.Method}";
+            _logger.LogError("{Message}. RequestId: {RequestId}, ErrorMessage: {ErrorMessage}",
+                logMessage, RequestId, ErrorMessage);
+
+            // Redirect to specific error pages for common scenarios
+            return StatusCode switch
+            {
+                404 => RedirectToPage("/Error/404"),
+                403 => RedirectToPage("/Error/403"),
+                500 => RedirectToPage("/Error/500"),
+                _ => Page()
+            };
         }
     }
 }

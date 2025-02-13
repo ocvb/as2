@@ -7,31 +7,21 @@ using _234412H_AS2.Services;
 
 namespace _234412H_AS2.Pages
 {
-    public class RegisterModel : PageModel
+    public class RegisterModel(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        IWebHostEnvironment environment,
+        IEncryptionService encryptionService
+            ) : PageModel
     {
-        private UserManager<ApplicationUser> _userManager { get; }
-        private SignInManager<ApplicationUser> _signInManager { get; }
-        private IWebHostEnvironment _environment { get; }
-        private readonly IEncryptionService _encryptionService;
+        private UserManager<ApplicationUser> _userManager { get; } = userManager;
+        private SignInManager<ApplicationUser> _signInManager { get; } = signInManager;
+        private IWebHostEnvironment _environment { get; } = environment;
+        private readonly IEncryptionService _encryptionService = encryptionService;
 
 
         [BindProperty]
         public required Register RModel { get; set; }
-
-        public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IWebHostEnvironment environment,
-            IEncryptionService encryptionService
-            )
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _environment = environment;
-            _encryptionService = encryptionService;
-        }
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {

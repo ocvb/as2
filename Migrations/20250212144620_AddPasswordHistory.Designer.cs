@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _234412H_AS2.Model;
 
@@ -10,9 +11,11 @@ using _234412H_AS2.Model;
 namespace _234412H_AS2.Migrations
 {
     [DbContext(typeof(AuthContextDb))]
-    partial class AuthContextDbModelSnapshot : ModelSnapshot
+    [Migration("20250212144620_AddPasswordHistory")]
+    partial class AddPasswordHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");

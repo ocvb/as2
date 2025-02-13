@@ -1,0 +1,48 @@
+@page
+@model _234412H_AS2.Pages.Error._403Model
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-container mt-5 mb-5">
+                <img src="~/images/error-403.svg" alt="403 Error" class="error-image mb-4" style="max-width: 300px;" />
+                <h1 class="display-1 text-warning mb-4">403</h1>
+                <h2 class="display-4 mb-3">Access Forbidden</h2>
+                <p class="lead mb-4">
+                    Sorry, you don't have permission to access this page.
+                    Please make sure you're logged in with the appropriate credentials.
+                </p>
+                <div class="error-actions">
+                    <a asp-page="/Index" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Return Home
+                    </a>
+                    <a asp-page="/Login" class="btn btn-warning btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .error-container {
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .error-image {
+            animation: shake 1s ease-in-out infinite;
+        }
+        @@keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+}

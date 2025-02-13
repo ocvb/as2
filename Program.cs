@@ -130,9 +130,8 @@ public class Program
         // Configure error handling
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
-            app.UseStatusCodePagesWithReExecute("/Errors/404");
-            app.UseHsts();
+            app.UseExceptionHandler("/Error/500");
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
         }
         else
         {

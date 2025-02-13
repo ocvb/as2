@@ -1,0 +1,47 @@
+@page
+@model _234412H_AS2.Pages.Error._404Model
+@{
+    ViewData["Title"] = "Page Not Found";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-container mt-5 mb-5">
+                <h1 class="display-1 text-danger mb-4">404</h1>
+                <h2 class="display-4 mb-3">Oops! Page Not Found</h2>
+                <p class="lead mb-4">
+                    We couldn't find the page you're looking for.
+                    The page might have been removed, had its name changed, or is temporarily unavailable.
+                </p>
+                <div class="error-actions">
+                    <a asp-page="/Index" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Return Home
+                    </a>
+                    <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .error-container {
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .error-image {
+            animation: float 3s ease-in-out infinite;
+        }
+        @@keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+}

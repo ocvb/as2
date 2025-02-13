@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using _234412H_AS2.Services.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using static _234412H_AS2.Pages.Account.LoginWith2faModel;
+using System.Security.Claims;
+using _234412H_AS2.Attributes;
 
 namespace _234412H_AS2.Pages.Account
 {
@@ -18,25 +21,29 @@ namespace _234412H_AS2.Pages.Account
 
         [BindProperty]
         public InputModel Input { get; set; }
-
         public class InputModel
         {
             [Required]
             [DataType(DataType.Password)]
+            [SanitizeInput]
             [Display(Name = "Current password")]
             public string CurrentPassword { get; set; }
 
             [Required]
+            [SanitizeInput]
+            [StringLength(100, MinimumLength = 12)]
             [DataType(DataType.Password)]
             [Display(Name = "New password")]
             public string NewPassword { get; set; }
 
-            [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Confirm new password")]
             [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -45,17 +52,18 @@ namespace _234412H_AS2.Pages.Account
                 return Page();
             }
 
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var result = await _passwordService.ChangePasswordAsync(userId, Input.CurrentPassword, Input.NewPassword);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var (success, message) = await _passwordService.ChangePasswordAsync(userId,
+                Input.CurrentPassword, Input.NewPassword);
 
-            if (result)
+            StatusMessage = message;
+            if (!success)
             {
-                TempData["StatusMessage"] = "Your password has been changed.";
-                return RedirectToPage("/Index");
+                ModelState.AddModelError(string.Empty, message);
+                return Page();
             }
 
-            ModelState.AddModelError(string.Empty, "Error changing password. Please verify your current password.");
-            return Page();
+            return RedirectToPage();
         }
     }
 }

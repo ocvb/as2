@@ -4,14 +4,9 @@ using _234412H_AS2.Services.Interfaces;
 
 namespace _234412H_AS2.Services
 {
-    public class PasswordChangeService : IPasswordChangeService
+    public class PasswordChangeService(UserManager<ApplicationUser> userManager) : IPasswordChangeService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public PasswordChangeService(UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         public async Task<bool> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {

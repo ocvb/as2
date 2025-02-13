@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using _234412H_AS2.Attributes;
 
 
 namespace _234412H_AS2.ViewModels
@@ -8,31 +9,37 @@ namespace _234412H_AS2.ViewModels
         [Required]
         [Display(Name = "Full Name")]
         [DataType(DataType.Text)]
+        [SanitizeInput]
         public string FullName { get; set; } = "";
 
         [Required]
         [Display(Name = "Credit Card Number")]
         [DataType(DataType.CreditCard)]
+        [SanitizeInput]
         public string CreditCardNumber { get; set; } = "";
 
         [Required]
         [Display(Name = "Gender")]
         [DataType(DataType.Text)]
+        [SanitizeInput]
         public string Gender { get; set; } = "";
 
         [Required]
-        [Display(Name = "Phone Number")]    
+        [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
+        [SanitizeInput]
         public string Phone { get; set; } = "";
 
         [Required]
         [Display(Name = "Address")]
         [DataType(DataType.Text)]
+        [SanitizeInput]
         public string Address { get; set; } = "";
 
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [SanitizeInput]
         public string Email { get; set; } = "";
 
         [Required]
@@ -51,6 +58,7 @@ namespace _234412H_AS2.ViewModels
         public IFormFile? ProfilePicture { get; set; }
 
         [DataType(DataType.Text)]
+        [SanitizeInput]
         public string? AboutMe { get; set; }
 
     }
