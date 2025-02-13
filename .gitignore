@@ -2,5 +2,8 @@ bin/
 
 obj/
 
-
 wwwroot/*
+wwwroot/.*
+credentials.*
+
+.*
