@@ -15,40 +15,46 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        builder.Services.AddRazorPages();
-        builder.Services.AddHttpContextAccessor();
+        ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
-        // Configure HttpClient for reCAPTCHA
-        builder.Services.AddHttpClient("RecaptchaClient", client =>
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+
+        var app = builder.Build();
+
+        InitializeDatabase(app);
+        ConfigureMiddleware(app, app.Environment);
+
+        app.Run();
+    }
+
+    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    {
+        // Basic Services
+        services.AddRazorPages();
+        services.AddHttpContextAccessor();
+        services.AddDistributedMemoryCache();
+
+        // Database
+        services.AddDbContext<AuthContextDb>(options =>
+            options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+
+        // Security Services
+        ConfigureIdentity(services);
+        ConfigureAuthentication(services);
+        ConfigureSession(services);
+        ConfigureRecaptcha(services, configuration);
+        ConfigureDataProtection(services, env);
+
+        // Application Services
+        RegisterApplicationServices(services);
+    }
+
+    private static void ConfigureIdentity(IServiceCollection services)
+    {
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
-            client.BaseAddress = new Uri("https://www.google.com/recaptcha/api/");
-        });
-
-        // Verify reCAPTCHA configuration
-        var recaptchaConfig = builder.Configuration.GetSection("Recaptcha");
-        if (string.IsNullOrEmpty(recaptchaConfig["SiteKey"]) || string.IsNullOrEmpty(recaptchaConfig["SecretKey"]))
-        {
-            throw new InvalidOperationException("reCAPTCHA configuration is missing or invalid");
-        }
-
-        // Replace the existing reCAPTCHA service registration
-        builder.Services.AddScoped<IRecaptchaService, RecaptchaEnterpriseService>();
-
-        builder.Services.AddDbContext<AuthContextDb>(options =>
-        {
-            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
-
-        // Add Data Protection
-        builder.Services.AddDataProtection()
-            .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "Keys")))
-            .SetApplicationName("234412H_AS2")
-            .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
-
-        builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-        {
-            // Password requirements
+            // Password settings
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = true;
@@ -59,20 +65,18 @@ public class Program
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Lockout.MaxFailedAccessAttempts = 3;
             options.Lockout.AllowedForNewUsers = true;
-
         })
         .AddEntityFrameworkStores<AuthContextDb>()
         .AddDefaultTokenProviders()
         .AddPasswordValidator<CustomPasswordValidator<ApplicationUser>>();
 
-        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-        builder.Services.AddScoped<IPasswordService, PasswordService>();
-        builder.Services.AddScoped<IEncryptionService, EncryptionService>();
-        builder.Services.AddScoped<IEmailService, EmailService>();
+        services.Configure<SecurityStampValidatorOptions>(options =>
+            options.ValidationInterval = TimeSpan.FromMinutes(5));
+    }
 
-        builder.Services.AddHostedService<BackgroundBackupService>();
-
-        builder.Services.ConfigureApplicationCookie(options =>
+    private static void ConfigureAuthentication(IServiceCollection services)
+    {
+        services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.HttpOnly = true;
             options.LoginPath = "/Login";
@@ -81,10 +85,11 @@ public class Program
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.SameSite = SameSiteMode.Strict;
         });
+    }
 
-        // Simplified Session Configuration
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options =>
+    private static void ConfigureSession(IServiceCollection services)
+    {
+        services.AddSession(options =>
         {
             options.Cookie = new CookieBuilder
             {
@@ -94,44 +99,49 @@ public class Program
                 SecurePolicy = CookieSecurePolicy.Always,
                 SameSite = SameSiteMode.Strict
             };
-            options.IdleTimeout = TimeSpan.FromMinutes(5);
+            options.IdleTimeout = TimeSpan.FromMinutes(3);
         });
+    }
 
-        builder.Services.AddSingleton<ISessionService, SessionService>();
+    private static void ConfigureRecaptcha(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient("RecaptchaClient", client =>
+            client.BaseAddress = new Uri("https://www.google.com/recaptcha/api/"));
 
-        builder.Services.AddScoped<AuditService>();
-
-        var app = builder.Build();
-
-        // Initialize database and roles
-        using (var scope = app.Services.CreateScope())
+        var recaptchaConfig = configuration.GetSection("Recaptcha");
+        if (string.IsNullOrEmpty(recaptchaConfig["SiteKey"]) || string.IsNullOrEmpty(recaptchaConfig["SecretKey"]))
         {
-            var services = scope.ServiceProvider;
-            try
-            {
-                var context = services.GetRequiredService<AuthContextDb>();
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-                // Ensure database is created
-                context.Database.EnsureCreated();
-
-                // Create roles if they don't exist
-                if (!roleManager.RoleExistsAsync("User").Result)
-                {
-                    var role = new IdentityRole("User");
-                    roleManager.CreateAsync(role).Wait();
-                }
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred while initializing the database.");
-            }
+            throw new InvalidOperationException("reCAPTCHA configuration is missing or invalid");
         }
 
-        // Configure error handling
-        if (!app.Environment.IsDevelopment())
+        services.AddScoped<IRecaptchaService, RecaptchaEnterpriseService>();
+    }
+
+    private static void ConfigureDataProtection(IServiceCollection services, IWebHostEnvironment env)
+    {
+        services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(env.ContentRootPath, "Keys")))
+            .SetApplicationName("234412H_AS2")
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
+    }
+
+    private static void RegisterApplicationServices(IServiceCollection services)
+    {
+        services.AddScoped<ILockoutService, LockoutService>();
+        services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IEncryptionService, EncryptionService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddHostedService<BackgroundBackupService>();
+        services.AddSingleton<ISessionService, SessionService>();
+        services.AddScoped<AuditService>();
+        services.AddScoped<PasswordPolicyService>();
+    }
+
+    private static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env)
+    {
+        // Error handling
+        if (!env.IsDevelopment())
         {
             app.UseExceptionHandler("/Error/500");
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
@@ -141,20 +151,10 @@ public class Program
             app.UseDeveloperExceptionPage();
         }
 
-        // Add logging middleware for debugging
-        app.Use(async (context, next) =>
-        {
-            var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation($"Request Path: {context.Request.Path}");
-            await next();
-        });
-
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
 
-        // Correct middleware order
         app.UseSession();
         app.UseMiddleware<SecurityHeadersMiddleware>();
         app.UseMiddleware<SessionMiddleware>();
@@ -163,9 +163,30 @@ public class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
-
-        app.Run();
     }
 
+    private static void InitializeDatabase(WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<AuthContextDb>();
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+            context.Database.EnsureCreated();
+
+            if (!roleManager.RoleExistsAsync("User").Result)
+            {
+                var role = new IdentityRole("User");
+                roleManager.CreateAsync(role).Wait();
+            }
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while initializing the database.");
+        }
+    }
 }

@@ -10,6 +10,7 @@ namespace _234412H_AS2.Model
         public string Address { get; set; } = "";
         public string? ProfilePicture { get; set; } = "";
         public string? AboutMe { get; set; } = "";
-
+        public DateTime? LastPasswordChangeDate { get; set; }
+        public DateTime? PasswordExpiryDate { get; set; }
     }
 }

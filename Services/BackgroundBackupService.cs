@@ -35,7 +35,7 @@ namespace _234412H_AS2.Services
             _logger.LogInformation("Database Backup Service is starting.");
 
             _timer = new Timer(DoBackup, null, TimeSpan.Zero,
-                TimeSpan.FromHours(24)); // Backup every 24 hours
+                TimeSpan.FromMinutes(5)); // Backup every 24 hours
 
             return Task.CompletedTask;
         }

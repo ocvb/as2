@@ -36,16 +36,9 @@
 
                     <form method="post" asp-page-handler="VerifyAndEnable">
                         <div class="form-group">
-                            <label for="verificationCode">Verification Code</label>
-                            <input type="text" id="verificationCode" name="verificationCode"
-                                   class="form-control" required
-                                   pattern="[0-9]{6}"
-                                   title="Please enter a 6-digit code" />
+                            <label for="VerificationCode">Verification Code:</label>
+                            <input type="text" class="form-control" asp-for="VerificationCode" maxlength="6" />
                         </div>
-                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-                        {
-                            <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
-                        }
                         <button type="submit" class="btn btn-primary mt-3">Verify and Enable 2FA</button>
                     </form>
                 }

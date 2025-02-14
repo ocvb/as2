@@ -11,7 +11,7 @@ namespace _234412H_AS2.Services
 
     public class EncryptionService : IEncryptionService
     {
-        private readonly string _key = "b14ca5898a4e4133bbce2ea2315a1916"; // 32 chars for AES-256
+        private readonly string _key = "b14ca5898a4e4133bbce2ea2315a1916";
 
         public string EncryptData(string data)
         {

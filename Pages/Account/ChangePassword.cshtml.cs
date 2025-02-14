@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using static _234412H_AS2.Pages.Account.LoginWith2faModel;
 using System.Security.Claims;
 using _234412H_AS2.Attributes;
+using Microsoft.AspNetCore.Identity;
+using _234412H_AS2.Model;
+using _234412H_AS2.Services;
 
 namespace _234412H_AS2.Pages.Account
 {
@@ -13,10 +16,17 @@ namespace _234412H_AS2.Pages.Account
     public class ChangePasswordModel : PageModel
     {
         private readonly IPasswordService _passwordService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly PasswordPolicyService _policyService;
 
-        public ChangePasswordModel(IPasswordService passwordService)
+        public ChangePasswordModel(
+            IPasswordService passwordService,
+            UserManager<ApplicationUser> userManager,
+            PasswordPolicyService policyService)
         {
             _passwordService = passwordService;
+            _userManager = userManager;
+            _policyService = policyService;
         }
 
         [BindProperty]
@@ -55,8 +65,20 @@ namespace _234412H_AS2.Pages.Account
                 return Page();
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var (success, message) = await _passwordService.ChangePasswordAsync(userId,
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (!await _policyService.CanChangePassword(user))
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Password cannot be changed within 24 hours of the last change.");
+                return Page();
+            }
+
+            var (success, message) = await _passwordService.ChangePasswordAsync(user.Id,
                 Input.CurrentPassword, Input.NewPassword);
 
             if (!success)
@@ -65,6 +87,7 @@ namespace _234412H_AS2.Pages.Account
                 return Page();
             }
 
+            await _policyService.UpdatePasswordDates(user);
             SuccessMessage = "Password changed successfully.";
             return RedirectToPage();
         }

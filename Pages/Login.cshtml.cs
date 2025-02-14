@@ -17,8 +17,8 @@ namespace _234412H_AS2.Pages
         IConfiguration configuration,
         ISessionService sessionService,
         IEncryptionService encryptionService,
-        AuditService auditService) : PageModel
-
+        AuditService auditService,
+        ILogger<LoginModel> logger) : PageModel  // Changed to typed logger
     {
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -27,6 +27,7 @@ namespace _234412H_AS2.Pages
         private readonly ISessionService _sessionService = sessionService;
         private readonly IEncryptionService _encryptionService = encryptionService;
         private readonly AuditService _auditService = auditService;
+        private readonly ILogger<LoginModel> _logger = logger;  // Changed to typed logger
 
         [BindProperty]
         public required LoginInputModel Input { get; set; }
@@ -62,14 +63,23 @@ namespace _234412H_AS2.Pages
                         return RedirectToPage("./Account/LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                     }
 
+                    // In the OnPostAsync method, after successful login:
                     if (result.Succeeded)
                     {
+                        var user = await _userManager.FindByEmailAsync(Input.Email);
+                        var policyService = new PasswordPolicyService(_userManager);
+
+                        if (await policyService.IsPasswordExpired(user))
+                        {
+                            return RedirectToPage("/ChangePassword", new { message = "Your password has expired. Please change it." });
+                        }
+
                         await _auditService.LogAction(
                             User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Input.Email,
                             "Login",
                             "User logged in successfully"
                         );
-                        var user = await _userManager.FindByEmailAsync(Input.Email);
+
                         if (user == null)
                         {
 
@@ -94,6 +104,15 @@ namespace _234412H_AS2.Pages
 
                     if (result.IsLockedOut)
                     {
+                        var user = await _userManager.FindByEmailAsync(Input.Email);
+                        if (user != null)
+                        {
+                            var lockoutEnd = DateTimeOffset.Now.AddMinutes(5);
+                            _logger.LogWarning("User account {Email} locked out until {LockoutEnd}",
+                                user.Email,
+                                lockoutEnd.ToString("O"));
+                            await _userManager.SetLockoutEndDateAsync(user, lockoutEnd);
+                        }
                         return RedirectToPage("./Lockout");
                     }
 
